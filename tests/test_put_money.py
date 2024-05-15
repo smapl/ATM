@@ -56,4 +56,4 @@ def test_put_to_atm_with_banknotes(atm_with_banknotes: ATM):
     atm_with_banknotes.put_money(banknote=1000, amount=1)
 
     assert atm_with_banknotes.total_money == money_before_operation + 1000
-    assert atm_with_banknotes.vault == Counter({10: 4, 50: 2, 100: 4, 500: 2, 1000: 3, 2000: 1, 5000: 1})
+    assert atm_with_banknotes.vault == Counter({10: 3, 50: 2, 100: 4, 500: 2, 1000: 3, 2000: 1, 5000: 1})
