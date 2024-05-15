@@ -76,5 +76,6 @@ pyenv local 3.11
 python -m venv venv 
 source venv/bin/activate
 pip install -r requirenments.txt
+export PYTHONPATH=$PYTHONPATH:$(pwd)
 pytest
 ```
