@@ -16,7 +16,7 @@ class ATM:
 
         if vault is not None:
             for banknote, amount in vault.items():
-                if not isinstance(banknote, int) or isinstance(amount, int):
+                if not isinstance(banknote, int) or not isinstance(amount, int):
                     raise TypeError('Передан неверный тип данных')
 
                 if amount <= 0:
@@ -27,7 +27,7 @@ class ATM:
 
             self._vault |= vault
 
-        self._total_money = sum((banknote * amount for banknote, amount in self._vault.items()))
+        self._total_money = self.__calculate_money_by_vault(self._vault)
         self._reserved_banknotes = Counter()
 
     @property
@@ -77,10 +77,13 @@ class ATM:
 
         return output_banknotes
 
+    def __calculate_money_by_vault(self, vault: dict[int, int]) -> int:
+        return sum((banknote * amount for banknote, amount in vault.items()))
+
     def __update_vault_state(self):
         # Вычитаем из хранилища ранее зарезервированные купюры
         self._vault -= self._reserved_banknotes
         self._reserved_banknotes.clear()
 
         # На основе актуальных данных в хранилище купюр высчитываем новую сумму всех доступных денег
-        self._total_money = sum((banknote * amount for banknote, amount in self._vault.items()))
+        self._total_money = self.__calculate_money_by_vault(self._vault)
