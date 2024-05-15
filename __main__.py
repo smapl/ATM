@@ -50,20 +50,24 @@ class ATM:
                 continue
 
             # Резервируем необходимые купюры
-            reserved_banknote_count = self._reserved_banknotes.setdefault(banknote, 0)
-            self._reserved_banknotes[banknote] = reserved_banknote_count + 1
+            reserved_banknote_amount = self._reserved_banknotes.setdefault(banknote, 0)
+            self._reserved_banknotes[banknote] = reserved_banknote_amount + 1
 
             process_money -= banknote
 
+        self.__update_vault_state()
+
+        return {banknote: amount for banknote, amount in self._reserved_banknotes.items() if amount != 0}
+
+    def __update_vault_state(self):
         # Вычитаем из хранилища ранее зарезервированные купюры
-        for banknote, count_banknote in self._reserved_banknotes.items():
-            vault_banknote_count = self._vault[banknote]
-            self._vault[banknote] = vault_banknote_count - count_banknote
+        for banknote, amount in self._reserved_banknotes.items():
+            vault_banknote_amount = self._vault[banknote]
+            self._vault[banknote] = vault_banknote_amount - amount
 
-        # правильнее написать приватный метод, который будет актуализировать тотал на основе купюр
-        self._total_money -= amount_money
+        # На основе актуальных данных в хранилище купюр высчитываем новую сумму всех доступных денег
+        self._total_money = sum((banknote * amount for banknote, amount in self._vault.items()))
 
-        return {banknote: count for banknote, count in self._reserved_banknotes.items() if count != 0}
 
 
 if __name__ == '__main__':
@@ -75,8 +79,8 @@ if __name__ == '__main__':
     atm.put_money(banknote=100, count=3)
     atm.put_money(banknote=50, count=2)
     atm.put_money(banknote=10, count=5)
-    # добавили 3950
-    print(atm.get_money(amount_money=1730))
-    print()
 
+    print(atm.get_money(amount_money=1730))
     print(atm.get_money(amount_money=1))
+    print(atm.get_money(amount_money=4000))
+    print(atm.get_money(amount_money=40))
