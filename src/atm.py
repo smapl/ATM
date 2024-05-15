@@ -1,6 +1,7 @@
 from collections import Counter
 
 from src.const import ACCESS_BANKNOTES
+from src.validators import validate_get_money_input_data, validate_put_money_input_data
 
 
 class ATM:
@@ -30,20 +31,13 @@ class ATM:
     def total_money(self):
         return self._total_money
 
+    @validate_put_money_input_data
     def put_money(self, banknote: int, amount: int) -> None:
-        if not isinstance(banknote, int) or not isinstance(amount, int):
-            raise TypeError('Передан неверный тип данных')
-
-        if banknote not in ACCESS_BANKNOTES:
-            raise ValueError('Неизвестная банкнота')
-
         self._vault[banknote] += amount
         self._total_money += amount * banknote
 
+    @validate_get_money_input_data
     def get_money(self, amount_money: int) -> dict[int, int] | str:
-        if not isinstance(amount_money, int):
-            raise TypeError('Передан неверный тип данных')
-
         if amount_money > self._total_money:
             return 'Денег недостаточно'
 
