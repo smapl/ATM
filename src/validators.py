@@ -30,7 +30,7 @@ def validate_get_money_input_data(func):
     @wraps(func)
     def inner(*args, **kwargs):
         if kwargs:
-            amount_money = kwargs['amount_money']
+            amount_money = kwargs['amount']
         else:
             _, amount_money = args
 
