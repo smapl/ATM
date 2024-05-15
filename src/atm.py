@@ -15,9 +15,16 @@ class ATM:
         self._vault = Counter({banknote: 0 for banknote in ACCESS_BANKNOTES})
 
         if vault is not None:
-            for banknote in vault:
+            for banknote, amount in vault.items():
+                if not isinstance(banknote, int) or isinstance(amount, int):
+                    raise TypeError('Передан неверный тип данных')
+
+                if amount <= 0:
+                    raise ValueError('Количество переданных банкнот должно быть больше нуля')
+
                 if banknote not in ACCESS_BANKNOTES:
                     raise ValueError('Попытка инициализировать банкомат с неизвестными купюрами')
+
             self._vault |= vault
 
         self._total_money = sum((banknote * amount for banknote, amount in self._vault.items()))
