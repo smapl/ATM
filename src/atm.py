@@ -44,13 +44,13 @@ class ATM:
         self._total_money += amount * banknote
 
     @validate_get_money_input_data
-    def get_money(self, amount_money: int) -> dict[int, int] | str:
-        if amount_money > self._total_money:
+    def get_money(self, amount: int) -> dict[int, int] | str:
+        if amount > self._total_money:
             return 'Денег недостаточно'
 
         access_vault_banknotes = sorted(self._vault.keys())
         index_max_banknote_value = 1
-        process_money = amount_money
+        process_money = amount
         while process_money:
             if index_max_banknote_value > len(self._vault):
                 return 'Невозможно собрать необходимую сумму с существующими купюрами'
